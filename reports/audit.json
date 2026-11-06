@@ -1,11 +1,38 @@
 {
   "period": "development",
-  "dates": ["2023-01-03", "2023-12-15"],
+  "dates": [
+    "2023-01-03",
+    "2023-12-15"
+  ],
   "claims_reviewed": 4,
   "supported_factual_statements": 2,
   "source_ids_in_fact_fields": 2,
   "misleading_constant_currency_interpretations": 1,
   "invalid_weight_comparisons_in_synthesis": 1,
   "invalid_purchase_vetoed": true,
-  "selection": "First/final scheduled development dates, reviewed before evaluation; descriptive sample"
+  "selection": "First/final scheduled development dates, reviewed before evaluation; descriptive sample",
+  "evidence_sha256": "8141266f63271fb0dacd50171aa4858543e82c7c760556e0b6f7431c77dd4091",
+  "evaluation_evidence": {
+    "msft-2023-10-24": {
+      "published_at": "2023-10-24",
+      "available_at": "2023-10-25T13:30:00Z",
+      "url": "https://www.microsoft.com/en-us/Investor/earnings/FY-2024-Q1/press-release-webcast",
+      "sha256": "273e4f67866436d423ca818c7584eec916213b5011c8d01ab6cf0e0eaca02e95",
+      "label": "S1",
+      "facts": "Microsoft reported quarterly revenue of $56.5 billion (+13% year over year) and diluted EPS of $2.99 (+27%)."
+    },
+    "msft-2024-10-30": {
+      "published_at": "2024-10-30",
+      "available_at": "2024-10-31T13:30:00Z",
+      "url": "https://www.microsoft.com/en-us/Investor/earnings/FY-2025-Q1/press-release-webcast",
+      "sha256": "05f28b504291bd2c10240a4d784836b7f83cb293c3d490550ecc669ef05bfb68",
+      "label": "S2",
+      "facts": "Microsoft reported quarterly revenue of $65.6 billion (+16% year over year) and operating income of $30.6 billion (+14%)."
+    }
+  },
+  "rejected_proposal_sources": {
+    "MSFT-2024-12-30": [
+      "msft-2024-10-30"
+    ]
+  }
 }

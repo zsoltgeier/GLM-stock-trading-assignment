@@ -8,6 +8,12 @@ Asset: Microsoft Corporation (MSFT), CIK 0000789019. Development: 2023-01-03 to 
 
 Daily OHLCV was retrieved from Yahoo via yfinance with dividend adjustment and price repair disabled. Nine original Microsoft earnings releases span October 2022 to October 2024. The first 4,000 characters from each release's REDMOND dateline form a fixed excerpt. Prices after the evaluation end are used only to score subsequent outcomes. Downloads, parameters, hashes and retrieval dates are preserved locally.
 
+Release publication dates: 2022-10-25; 2023-01-24, 04-25, 07-25, 10-24; 2024-01-30, 04-25, 07-30, 10-30. Inputs were downloaded on 2026-11-06; historical eligibility uses publication dates, not download time. The examples below cite two original sources:
+
+S1: published 2023-10-24; eligible 2023-10-25T13:30:00Z (UTC). https://www.microsoft.com/en-us/Investor/earnings/FY-2024-Q1/press-release-webcast
+
+S2: published 2024-10-30; eligible 2024-10-31T13:30:00Z (UTC). https://www.microsoft.com/en-us/Investor/earnings/FY-2025-Q1/press-release-webcast
+
 Daily data use the XNYS exchange calendar, including holidays and early closes. Decisions occur at the recorded regular-session close; orders can fill only at the following session's open. Date-only financial releases become eligible at the strictly following session's open. Publication, availability and retrieval times are separate; all decision timestamps are UTC. Future documents are filtered before extraction.
 
 This is exploratory: the protocol and prompts are recorded before each run, but the project has not established preregistration or an untouched confirmatory replication. Selecting one familiar surviving company and downloading revised historical prices are additional sources of bias.
@@ -41,15 +47,19 @@ Run source commit: 45f0cecabf3e. Config hash: c06f10bbeb057bd2. Exact data/promp
 
 Rule 1: absent/stale evidence older than 120 days, missing indicator history or market sessions, invalid JSON, wrong company, unresolved references and invalid timestamps force NO_TRADE. Model failures get a bounded retry; exhausted attempts also abstain. Rule 2: purchases may target at most 25% of post-cost equity; negative holdings and borrowing are forbidden. This limit applies at purchase, so price drift can subsequently increase exposure.
 
-BUY opens/increases a long position, SELL closes an existing long, HOLD preserves holdings or cash, and NO_TRADE sends no new order. Abstention retains existing holdings and their risk. SELL while flat and inconsistent HOLD targets are vetoed. Invalid valuation data abort evaluation rather than fabricate a flat return.
+BUY increases a long position; SELL closes it; HOLD preserves holdings/cash; NO_TRADE sends no order and retains existing risk. SELL while flat and inconsistent HOLD targets are vetoed. Invalid valuation data abort evaluation.
 
-Date / action | Evidence / uncertainty | Rationale or veto (excerpt)
---- | --- | ---
-2024-01-02 / BUY | msft-2023-10-24 / low | The recent revenue growth of 13% and Office Commercial products and cloud services segment growth of 15% indicate strong financial performance. Given the low uncertainty, this trend supports a buy position.
-2024-01-17 / HOLD | msft-2023-10-24, msft-2023-10-24 / low | The recent revenue and EPS growth indicate strong financial performance, but the RSI indicator at 69 suggests that the stock may be overbought and could be in a consolidation phase. The HOLD decision preserves the current position to avoid potential 
-2024-12-30 / NO_TRADE |  / high | RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY
+Verified source facts (S1): Microsoft reported quarterly revenue of $56.5 billion (+13% year over year) and diluted EPS of $2.99 (+27%).
 
-Examples are the first two scheduled decisions and the final one, chosen by position in the schedule. All remaining decisions and the subsequent 10-session open-to-open price outcome are saved separately; future outcome fields never enter prompts.
+Verified source facts (S2): Microsoft reported quarterly revenue of $65.6 billion (+16% year over year) and operating income of $30.6 billion (+14%).
+
+Date / action | Evidence / indicators | Model interpretation / code veto | Next-10-session stock outcome
+--- | --- | --- | ---
+2024-01-02 / BUY | S1; sma20=372.40; sma50=364.36; rsi14=49.98; uncertainty low | The recent revenue growth of 13% and Office Commercial products and cloud services segment growth of 15% indicate strong financial performance | 2024-01-03 to 2024-01-18: +6.15%
+2024-01-17 / HOLD | S1; sma20=376.40; sma50=373.11; rsi14=69.10; uncertainty low | The recent revenue and EPS growth indicate strong financial performance, but the RSI indicator at 69 suggests that the stock may be overbought and could be in a consolidation phase | 2024-01-18 to 2024-02-01: +2.58%
+2024-12-30 / NO_TRADE | S2; sma20=440.30; sma50=428.48; rsi14=40.49; uncertainty high | Code veto: current weight 27.73%; purchase cap 25%. | 2024-12-31 to 2025-01-16: +0.61%
+
+Examples are the first two scheduled dates and the final date, chosen independently of returns. Uncertainty is the model's label or the code's conservative abstention label. For the final veto, S2 identifies evidence cited by the rejected BUY proposal; the final action follows the position rule. Forward stock outcomes are diagnostics, not executed trades or inputs to prompts.
 
 Verified model-stage calls: 52/52; extra attempts: 0. Action counts: {"BUY": 1, "HOLD": 1, "NO_TRADE": 24}. Abstention rate: 92.3%. Veto categories: {"RISK_VETO": 24}. A valid stage requires schema, identity, eligible references and the stage-specific checks; it is not a prediction-accuracy score.
 

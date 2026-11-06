@@ -51,3 +51,18 @@ def test_replay_keeps_original_protocol_and_detects_changed_decisions(tmp_path, 
     with pytest.raises(ValueError, match="differ"):
         save_run(cfg, Ollama(cfg.llm, cfg.cache_dir, replay=True), "evaluation", replay=True)
     assert json.loads(decisions_path.read_text()) == changed
+
+
+def test_source_archive_replay_does_not_require_git(tmp_path, monkeypatch):
+    import subprocess
+
+    def no_repository(*args, **kwargs):
+        raise subprocess.CalledProcessError(128, args[0])
+
+    monkeypatch.setattr(subprocess, "check_output", no_repository)
+    monkeypatch.delenv("LLM_MODEL", raising=False)
+    cfg = load_config("config/sample.yml").model_copy(update={"output_dir":tmp_path})
+    metrics = save_run(cfg, Ollama(cfg.llm, cfg.cache_dir, replay=True), "evaluation", replay=True)
+    assert metrics["actions"] == {"BUY":1, "HOLD":2}
+    manifest = json.loads((tmp_path / "evaluation" / "manifest.json").read_text())
+    assert manifest["git_commit"] == "unavailable (source archive)"

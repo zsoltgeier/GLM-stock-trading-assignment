@@ -34,6 +34,8 @@ Distributed prices, release and responses are **synthetic test fixtures**, not
 historical findings or LLM outputs. Fixed expected actions/returns and
 network-disabled tests verify reproduction. Results go to `results/sample/`;
 the labeled report goes to `reports/sample_report.pdf`.
+The example also works from a source ZIP without Git metadata; the run manifest
+then records that the source commit is unavailable.
 
 ## Local Ollama and historical analysis
 

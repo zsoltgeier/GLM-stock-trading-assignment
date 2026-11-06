@@ -19,10 +19,13 @@ def generate_report(config, period="evaluation"):
     metrics = json.loads((output / "metrics.json").read_text())
     comparison = json.loads((output / "comparison.json").read_text())
     decisions = json.loads((output / "decisions.json").read_text())
-    calls = json.loads((output / "calls.json").read_text())
     outcomes = pd.read_csv(output / "outcomes.csv")
     cfg = recorded
     synthetic = cfg.data_kind == "synthetic_fixture"
+    audit_path = Path("reports/audit.json")
+    audit = json.loads(audit_path.read_text()) if audit_path.exists() else {}
+    evidence_audit = (audit.get("evaluation_evidence", {})
+                      if audit.get("evidence_sha256") == manifest["evidence_sha256"] and not synthetic else {})
     label = "SYNTHETIC FIXTURE DEMONSTRATION" if synthetic else "EXPLORATORY HISTORICAL REPLAY"
     styles = getSampleStyleSheet()
     styles["BodyText"].fontSize = 9
@@ -64,6 +67,10 @@ def generate_report(config, period="evaluation"):
         paragraph("Every price, document and model response in this run is an authored artificial fixture. These figures verify software behavior only; they provide no evidence about Microsoft or LLM trading performance. A genuine historical run is required for academic findings.")
     else:
         paragraph("Daily OHLCV was retrieved from Yahoo via yfinance with dividend adjustment and price repair disabled. Nine original Microsoft earnings releases span October 2022 to October 2024. The first 4,000 characters from each release's REDMOND dateline form a fixed excerpt. Prices after the evaluation end are used only to score subsequent outcomes. Downloads, parameters, hashes and retrieval dates are preserved locally.")
+        if evidence_audit:
+            paragraph("Release publication dates: 2022-10-25; 2023-01-24, 04-25, 07-25, 10-24; 2024-01-30, 04-25, 07-30, 10-30. Inputs were downloaded on 2026-11-06; historical eligibility uses publication dates, not download time. The examples below cite two original sources:")
+            for source in evidence_audit.values():
+                paragraph(f"{source['label']}: published {source['published_at']}; eligible {source['available_at']} (UTC). {source['url']}")
     paragraph(f"Daily data use the {cfg.calendar} exchange calendar, including holidays and early closes. Decisions occur at the recorded regular-session close; orders can fill only at the following session's open. Date-only financial releases become eligible at the strictly following session's open. Publication, availability and retrieval times are separate; all decision timestamps are UTC. Future documents are filtered before extraction.")
     paragraph("This is exploratory: the protocol and prompts are recorded before each run, but the project has not established preregistration or an untouched confirmatory replication. Selecting one familiar surviving company and downloading revised historical prices are additional sources of bias.")
     next_page()
@@ -84,15 +91,32 @@ def generate_report(config, period="evaluation"):
 
     heading("3. Risk controls and representative decisions")
     paragraph(f"Rule 1: absent/stale evidence older than {cfg.max_source_age_days} days, missing indicator history or market sessions, invalid JSON, wrong company, unresolved references and invalid timestamps force NO_TRADE. Model failures get a bounded retry; exhausted attempts also abstain. Rule 2: purchases may target at most {cfg.max_weight:.0%} of post-cost equity; negative holdings and borrowing are forbidden. This limit applies at purchase, so price drift can subsequently increase exposure.")
-    paragraph("BUY opens/increases a long position, SELL closes an existing long, HOLD preserves holdings or cash, and NO_TRADE sends no new order. Abstention retains existing holdings and their risk. SELL while flat and inconsistent HOLD targets are vetoed. Invalid valuation data abort evaluation rather than fabricate a flat return.")
+    paragraph("BUY increases a long position; SELL closes it; HOLD preserves holdings/cash; NO_TRADE sends no order and retains existing risk. SELL while flat and inconsistent HOLD targets are vetoed. Invalid valuation data abort evaluation.")
+    if evidence_audit:
+        for source in evidence_audit.values():
+            paragraph(f"Verified source facts ({source['label']}): {source['facts']}")
     # Fixed examples: first two scheduled dates and final date, not selected for returns.
     selected = [decisions[i] for i in sorted({0, min(1, len(decisions)-1), len(decisions)-1})]
-    table(["Date / action", "Evidence / uncertainty", "Rationale or veto (excerpt)"], [[
-        d["decision_time"][:10] + " / " + d["action"],
-        ", ".join(d["evidence_ids"]) + " / " + d["uncertainty"],
-        d["rationale"][:250],
-    ] for d in selected], [105, 125, 265])
-    paragraph("Examples are the first two scheduled decisions and the final one, chosen by position in the schedule. All remaining decisions and the subsequent 10-session open-to-open price outcome are saved separately; future outcome fields never enter prompts.")
+    example_rows = []
+    for d in selected:
+        references = list(dict.fromkeys(d["evidence_ids"]))
+        if not references and evidence_audit:
+            references = audit.get("rejected_proposal_sources", {}).get(d["decision_id"], [])
+        references = [evidence_audit.get(ref, {}).get("label", ref) for ref in references]
+        values = d["indicator_values"]
+        technical = "; ".join(f"{k}={v:.2f}" for k, v in values.items() if v is not None)
+        rationale = d["rationale"].split(". ")[0]
+        if d["action"] == "NO_TRADE" and d["veto_reasons"]:
+            rationale = f"Code veto: current weight {d['proposed_target_weight']:.2%}; purchase cap {cfg.max_weight:.0%}." if d["veto_reasons"][0].startswith("RISK_VETO") else d["rationale"]
+        outcome = outcomes.loc[outcomes.decision_id == d["decision_id"]].iloc[0]
+        subsequent = (f"{outcome.entry_date} to {outcome.outcome_date}: {outcome.forward_price_return:+.2%}"
+                      if outcome.status == "OK" else "Outcome unavailable")
+        example_rows.append([d["decision_time"][:10] + " / " + d["action"],
+            f"{', '.join(references) or 'Risk/data rule'}; {technical}; uncertainty {d['uncertainty']}",
+            rationale, subsequent])
+    table(["Date / action", "Evidence / indicators", "Model interpretation / code veto", "Next-10-session stock outcome"],
+          example_rows, [85, 135, 165, 110])
+    paragraph("Examples are the first two scheduled dates and the final date, chosen independently of returns. Uncertainty is the model's label or the code's conservative abstention label. For the final veto, S2 identifies evidence cited by the rejected BUY proposal; the final action follows the position rule. Forward stock outcomes are diagnostics, not executed trades or inputs to prompts." if evidence_audit else "Examples are the first two scheduled dates and the final date. Forward stock outcomes are diagnostics, not executed trades or inputs to prompts.")
     valid = metrics.get("valid_llm_calls", 0)
     total = metrics.get("llm_calls", 0)
     paragraph(f"Verified model-stage calls: {valid}/{total}; extra attempts: {metrics.get('extra_attempts', 0)}. Action counts: {json.dumps(metrics['actions'], sort_keys=True)}. Abstention rate: {metrics['abstention_rate']:.1%}. Veto categories: {json.dumps(metrics['veto_reasons'], sort_keys=True)}. A valid stage requires schema, identity, eligible references and the stage-specific checks; it is not a prediction-accuracy score.")
@@ -115,9 +139,7 @@ def generate_report(config, period="evaluation"):
     heading("5. Verification, limitations and conclusions")
     paragraph("The automated suite covers arithmetic SMA/Wilder RSI examples, warm-up and zero-loss/flat cases, calendar holidays/early closes, missing sessions and malformed prices, evidence age/cutoffs, identity/reference/quote validation, bounded model failures, position rules, next-open execution, two-sided costs and share/cash accounting. A regression test appends changed future prices/documents and requires earlier decisions to remain identical. The distributed fixture runs twice with networking disabled and reproduces fixed expected actions and return.")
     paragraph("The repository's verification notes record the actual test command and manual audit observations. Human review must distinguish a true historical fact from the model's interpretation and confidence about future prices. Passing structural checks alone does not establish semantic accuracy or justify a trade.")
-    audit_path = Path("reports/audit.json")
-    if not synthetic and audit_path.exists():
-        audit = json.loads(audit_path.read_text())
+    if not synthetic and audit:
         paragraph(f"Development audit: {audit['claims_reviewed']} claims on the first/final scheduled 2023 dates were inspected before evaluation. Two contained supported numerical facts; two used source IDs instead of factual statements. One interpretation confused constant-currency growth with prior-year growth. Final synthesis claimed roughly 34.7% exposure was below 25%; the code vetoed its purchase. This small audit illustrates the difference between mechanical validity and semantic reliability.")
     paragraph("Main limitations: historical cutoff filtering cannot remove future information already encoded in pretrained model weights; temperature zero and a seed do not guarantee identical outputs across hardware/server versions; vendor data are downloaded retrospectively; a small number of earnings releases omits intervening news; a single selected survivor stock/year is not representative. Short quotes can be valid while the associated interpretation is weak. Broad trading recommendations and uncalibrated model confidence remain uncertain.")
     paragraph("The next-open, fractional-share and fixed-cost model omits order-book effects, taxes, dividends, cash interest and execution gaps beyond observed daily opens. A small number of trades makes win rates or statistical significance uninformative. Increasing a position only at scheduled decisions also differs from continuous risk management. These results evaluate the implemented workflow, not a deployable trading system.")
@@ -145,5 +167,6 @@ def generate_report(config, period="evaluation"):
     if not synthetic:
         (report_dir / "results.json").write_text(json.dumps({"manifest":manifest, "metrics":metrics,
             "comparison":comparison, "decisions":decisions,
+            "evidence_audit":evidence_audit,
             "outcomes":json.loads(outcomes.to_json(orient="records"))}, indent=2))
     return path

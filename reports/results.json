@@ -928,6 +928,24 @@
       "proposed_target_weight": 0.2773295093358953
     }
   ],
+  "evidence_audit": {
+    "msft-2023-10-24": {
+      "published_at": "2023-10-24",
+      "available_at": "2023-10-25T13:30:00Z",
+      "url": "https://www.microsoft.com/en-us/Investor/earnings/FY-2024-Q1/press-release-webcast",
+      "sha256": "273e4f67866436d423ca818c7584eec916213b5011c8d01ab6cf0e0eaca02e95",
+      "label": "S1",
+      "facts": "Microsoft reported quarterly revenue of $56.5 billion (+13% year over year) and diluted EPS of $2.99 (+27%)."
+    },
+    "msft-2024-10-30": {
+      "published_at": "2024-10-30",
+      "available_at": "2024-10-31T13:30:00Z",
+      "url": "https://www.microsoft.com/en-us/Investor/earnings/FY-2025-Q1/press-release-webcast",
+      "sha256": "05f28b504291bd2c10240a4d784836b7f83cb293c3d490550ecc669ef05bfb68",
+      "label": "S2",
+      "facts": "Microsoft reported quarterly revenue of $65.6 billion (+16% year over year) and operating income of $30.6 billion (+14%)."
+    }
+  },
   "outcomes": [
     {
       "decision_id": "MSFT-2024-01-02",

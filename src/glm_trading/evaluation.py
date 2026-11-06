@@ -168,6 +168,14 @@ def forward_outcomes(decisions, prices, cal, config):
     return pd.DataFrame(rows)
 
 
+def source_commit():
+    try:
+        return subprocess.check_output(["git", "rev-parse", "HEAD"], text=True,
+                                       stderr=subprocess.DEVNULL).strip()
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return "unavailable (source archive)"
+
+
 def save_run(config, model, period, replay=False):
     output = config.output_dir / period
     output.mkdir(parents=True, exist_ok=True)
@@ -180,7 +188,7 @@ def save_run(config, model, period, replay=False):
         "prompts":{p.name:text_hash(p.read_text()) for p in sorted(prompt_dir.glob("*.txt"))},
         "prices_sha256":text_hash(config.prices_path.read_text()),
         "evidence_sha256":text_hash(config.evidence_path.read_text()),
-        "git_commit":subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+        "git_commit":source_commit(),
         "versions":{p:version(p) for p in ["glm-trading", "pandas", "numpy", "pydantic", "exchange-calendars"]},
         "limitations":["Pretrained future knowledge cannot be excluded", "Retrospectively downloaded vendor data",
                        "One selected stock/year, exploratory results", "Price returns exclude dividends"]}
