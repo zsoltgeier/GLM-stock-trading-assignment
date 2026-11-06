@@ -4,7 +4,7 @@ import math
 
 from .evidence import eligible_sources, verify_candidate, verify_events
 from .indicators import indicators
-from .llm import ModelFailure
+from .llm import CacheMiss, ModelFailure
 from .risk import veto
 from .schemas import Candidate, Decision, Events
 from .validation import validate_prices
@@ -54,5 +54,7 @@ def decide(prices, sources, session, cal, config, model, current_weight):
             return abstain("RISK_VETO: " + ",".join(reasons))
         result = {**common, **candidate.model_dump(), "veto_reasons":[]}
         return Decision.model_validate(result)
+    except CacheMiss:
+        raise
     except ModelFailure as exc:
         return abstain("MODEL_FAILURE: " + str(exc))

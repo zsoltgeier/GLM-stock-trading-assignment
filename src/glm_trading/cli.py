@@ -29,8 +29,12 @@ def main():
             identity = None
             if replay:
                 manifest = config.output_dir / args.period / "manifest.json"
-                identity = json.loads(manifest.read_text())["model"]
-            model = Ollama(config.llm, config.output_dir / "cache", replay=replay, identity=identity)
+                if manifest.exists():
+                    from .evaluation import verify_run_inputs
+                    identity = verify_run_inputs(config, args.period)["model"]
+            if config.data_kind == "synthetic_fixture" and not replay:
+                raise ValueError("Synthetic configuration supports offline replay only")
+            model = Ollama(config.llm, config.cache_dir or config.output_dir / "cache", replay=replay, identity=identity)
             if not replay:
                 print("Local model:", model.inspect(), flush=True)
             print(json.dumps(save_run(config, model, args.period, replay), indent=2))

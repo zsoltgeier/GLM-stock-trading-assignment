@@ -1,6 +1,7 @@
 """Small, validated experiment configuration; paths are relative to the repository."""
 
 from pathlib import Path
+from typing import Literal
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -36,6 +37,8 @@ class Config(BaseModel):
     prices_path: Path
     evidence_path: Path
     output_dir: Path
+    cache_dir: Path | None = None
+    data_kind: Literal["historical", "synthetic_fixture"] = "historical"
     llm: LLMConfig = Field(default_factory=LLMConfig)
 
     @model_validator(mode="after")

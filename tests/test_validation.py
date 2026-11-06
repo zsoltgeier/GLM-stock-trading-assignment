@@ -37,6 +37,14 @@ def test_evidence_cutoff_staleness_and_boundary(source, config, cal):
     assert not eligible_sources([source], boundary + pd.Timedelta(seconds=1), config, cal)
 
 
+def test_future_wrong_identity_does_not_affect_past_input(source, config, cal):
+    future = source.model_copy(update={"ticker":"OTHER", "available_at":utc("2025-01-01T00:00:00Z")})
+    assert eligible_sources([source, future], source.available_at, config, cal) == [source]
+    wrong = source.model_copy(update={"ticker":"OTHER"})
+    with pytest.raises(ValueError, match="identity"):
+        eligible_sources([wrong], source.available_at, config, cal)
+
+
 @pytest.mark.parametrize("defect", ["reference", "quote", "ticker"])
 def test_claim_validation(source, config, defect):
     event = dict(ticker="MSFT", company=config.company, uncertainty="high", claims=[

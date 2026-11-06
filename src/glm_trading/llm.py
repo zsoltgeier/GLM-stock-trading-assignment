@@ -13,6 +13,10 @@ class ModelFailure(ValueError):
     pass
 
 
+class CacheMiss(ModelFailure):
+    """An incomplete replay is a run error, not a historical model abstention."""
+
+
 class Ollama:
     def __init__(self, config, cache_dir, replay=False, identity=None):
         self.config = config
@@ -49,7 +53,7 @@ class Ollama:
             # Do not trust cached outputs without reapplying all current checks.
             attempts = log["attempts"]
         elif self.replay:
-            raise ModelFailure(f"Replay cache miss for {stage}: {key}")
+            raise CacheMiss(f"Replay cache miss for {stage}: {key}")
         else:
             attempts = []
             self.cache_dir.mkdir(parents=True, exist_ok=True)

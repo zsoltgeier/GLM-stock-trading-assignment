@@ -51,6 +51,9 @@ def release_excerpt(html):
 def download(config, source_file=Path("data/sources.json")):
     import yfinance as yf
 
+    registry = json.loads(source_file.read_text())
+    if any(registry[key] != getattr(config, key) for key in ("ticker", "company", "cik")):
+        raise ValueError("Source registry and experiment company identity differ")
     cal = calendar(config)
     config.prices_path.parent.mkdir(parents=True, exist_ok=True)
     params = dict(tickers=config.ticker, start=config.warmup_start, end=config.data_end,
@@ -74,12 +77,17 @@ def download(config, source_file=Path("data/sources.json")):
                 "price_convention":"Vendor split-adjusted OHLC, no dividend adjustment; price returns only; reject splits in interval"}
     config.prices_path.with_suffix(".manifest.json").write_text(json.dumps(manifest, indent=2))
     sources = []
-    for spec in json.loads(source_file.read_text()):
+    for spec in registry["sources"]:
         response = requests.get(spec["url"], headers={"User-Agent":"GLM-Trading educational research"}, timeout=45)
         response.raise_for_status()
         raw_path = config.evidence_path.parent / f"{spec['source_id']}.html"
         raw_path.write_text(response.text)
         text = release_excerpt(response.text)
+        published = datetime.fromisoformat(spec["published_at"])
+        if f"{published:%B} {published.day}, {published:%Y}" not in text[:120]:
+            raise ValueError(f"Release publication date mismatch: {spec['source_id']}")
+        if config.ticker not in response.text:
+            raise ValueError("Release does not identify the expected ticker")
         sources.append(Source(**spec, ticker=config.ticker, company=config.company, cik=config.cik,
             available_at=available_at(spec["published_at"], "date", cal), timestamp_precision="date",
             retrieved_at=now, text=text, sha256=text_hash(text)).model_dump(mode="json"))

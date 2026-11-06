@@ -8,6 +8,7 @@ from glm_trading.decisions import decide
 from glm_trading.llm import ModelFailure, Ollama
 from glm_trading.risk import veto
 from glm_trading.schemas import Candidate, Events
+from glm_trading.evidence import verify_candidate
 
 
 class FixtureModel:
@@ -79,3 +80,19 @@ def test_timeout_becomes_no_trade(tmp_path, config, prices, source, cal, monkeyp
     assert result.action == "NO_TRADE"
     assert result.veto_reasons[0].startswith("MODEL_FAILURE")
     assert model.calls[0]["attempts"] == 2
+
+
+@pytest.mark.parametrize("defect", ["timestamp", "ticker", "reference", "action", "nonfinite"])
+def test_synthesis_rejects_invalid_output(defect, config):
+    events = Events(ticker="MSFT", company=config.company, uncertainty="high", claims=[
+        {"fact":"test", "source_id":"release", "quote":"test", "interpretation":"test"}])
+    data = dict(ticker="MSFT", decision_time="2024-01-02T21:00:00Z", action="HOLD",
+        rationale="test", uncertainty="high", uncertainty_reason="test", evidence_ids=["release"], proposed_target_weight=0)
+    if defect == "timestamp": data["decision_time"] = "2024-01-03T21:00:00Z"
+    if defect == "ticker": data["ticker"] = "OTHER"
+    if defect == "reference": data["evidence_ids"] = ["future"]
+    if defect == "action": data["action"] = "SHORT"
+    if defect == "nonfinite": data["proposed_target_weight"] = float("nan")
+    with pytest.raises(ValueError):
+        value = Candidate.model_validate(data)
+        verify_candidate(value, events, "2024-01-02T21:00:00Z", config)

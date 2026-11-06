@@ -1,4 +1,8 @@
-[
+{
+ "ticker": "MSFT",
+ "company": "Microsoft Corporation",
+ "cik": "0000789019",
+ "sources": [
   {"source_id":"msft-2022-10-25","published_at":"2022-10-25","url":"https://www.microsoft.com/en-us/Investor/earnings/FY-2023-Q1/press-release-webcast"},
   {"source_id":"msft-2023-01-24","published_at":"2023-01-24","url":"https://www.microsoft.com/en-us/Investor/earnings/FY-2023-Q2/press-release-webcast"},
   {"source_id":"msft-2023-04-25","published_at":"2023-04-25","url":"https://www.microsoft.com/en-us/Investor/earnings/FY-2023-Q3/press-release-webcast"},
@@ -8,4 +12,5 @@
   {"source_id":"msft-2024-04-25","published_at":"2024-04-25","url":"https://www.microsoft.com/en-us/Investor/earnings/FY-2024-Q3/press-release-webcast"},
   {"source_id":"msft-2024-07-30","published_at":"2024-07-30","url":"https://www.microsoft.com/en-us/Investor/earnings/FY-2024-Q4/press-release-webcast"},
   {"source_id":"msft-2024-10-30","published_at":"2024-10-30","url":"https://www.microsoft.com/en-us/Investor/earnings/FY-2025-Q1/press-release-webcast"}
-]
+ ]
+}

@@ -1,0 +1,105 @@
+{
+  "identity": {
+    "model": "authored-test-fixture"
+  },
+  "request": {
+    "model": "authored-test-fixture",
+    "stream": false,
+    "keep_alive": "10m",
+    "format": {
+      "additionalProperties": false,
+      "properties": {
+        "ticker": {
+          "title": "Ticker",
+          "type": "string"
+        },
+        "decision_time": {
+          "format": "date-time",
+          "title": "Decision Time",
+          "type": "string"
+        },
+        "action": {
+          "enum": [
+            "BUY",
+            "SELL",
+            "HOLD",
+            "NO_TRADE"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "uncertainty": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "title": "Uncertainty",
+          "type": "string"
+        },
+        "uncertainty_reason": {
+          "minLength": 1,
+          "title": "Uncertainty Reason",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "proposed_target_weight": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Proposed Target Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "ticker",
+        "decision_time",
+        "action",
+        "rationale",
+        "uncertainty",
+        "uncertainty_reason",
+        "evidence_ids",
+        "proposed_target_weight"
+      ],
+      "title": "Candidate",
+      "type": "object"
+    },
+    "options": {
+      "temperature": 0,
+      "seed": 42,
+      "num_ctx": 8192,
+      "num_predict": 700
+    },
+    "messages": [
+      {
+        "role": "system",
+        "content": "You synthesize an academic stock decision using only the supplied verified events,\npast-only indicators, portfolio state and risk constraints. No outside knowledge or tools.\nCopy ticker and decision_time exactly. Give a concise rationale (at most 2 sentences),\nuncertainty and its reason. Cite source IDs present in verified claims.\nConsider whether source facts materially support the technical trend; reported growth\nalone does not establish future returns. Never treat your uncertainty as a probability.\nBUY opens/increases the long position to max_weight; SELL closes an existing position;\nHOLD preserves the current position (or cash); NO_TRADE abstains when evidence is inadequate.\nNo borrowing or short selling. SELL while flat is invalid. For BUY use max_weight;\nfor SELL use 0; for HOLD/NO_TRADE use current_weight.\nDo not emit claims about subsequent prices. Return only JSON matching the supplied schema.\n"
+      },
+      {
+        "role": "user",
+        "content": "{\"input\": {\"current_weight\": 0.24900316197207717, \"decision_time\": \"2024-01-17T21:00:00+00:00\", \"indicators\": {\"rsi14\": 67.41921612850479, \"sma20\": 106.59406842237937, \"sma50\": 103.87767404566972}, \"max_weight\": 0.25, \"ticker\": \"MSFT\", \"verified_events\": {\"claims\": [{\"fact\": \"Artificial revenue increase\", \"interpretation\": \"An artificial example, not investment evidence\", \"quote\": \"Synthetic fixture: revenue increased by 10 percent.\", \"source_id\": \"synthetic-release\"}], \"company\": \"Microsoft Corporation\", \"ticker\": \"MSFT\", \"uncertainty\": \"high\"}}, \"output_schema\": {\"additionalProperties\": false, \"properties\": {\"action\": {\"enum\": [\"BUY\", \"SELL\", \"HOLD\", \"NO_TRADE\"], \"title\": \"Action\", \"type\": \"string\"}, \"decision_time\": {\"format\": \"date-time\", \"title\": \"Decision Time\", \"type\": \"string\"}, \"evidence_ids\": {\"items\": {\"type\": \"string\"}, \"minItems\": 1, \"title\": \"Evidence Ids\", \"type\": \"array\"}, \"proposed_target_weight\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Proposed Target Weight\", \"type\": \"number\"}, \"rationale\": {\"minLength\": 1, \"title\": \"Rationale\", \"type\": \"string\"}, \"ticker\": {\"title\": \"Ticker\", \"type\": \"string\"}, \"uncertainty\": {\"enum\": [\"low\", \"medium\", \"high\"], \"title\": \"Uncertainty\", \"type\": \"string\"}, \"uncertainty_reason\": {\"minLength\": 1, \"title\": \"Uncertainty Reason\", \"type\": \"string\"}}, \"required\": [\"ticker\", \"decision_time\", \"action\", \"rationale\", \"uncertainty\", \"uncertainty_reason\", \"evidence_ids\", \"proposed_target_weight\"], \"title\": \"Candidate\", \"type\": \"object\"}}"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "response": {
+        "message": {
+          "content": "{\"ticker\": \"MSFT\", \"decision_time\": \"2024-01-17T21:00:00+00:00\", \"action\": \"HOLD\", \"rationale\": \"Authored fixture for offline verification only\", \"uncertainty\": \"high\", \"uncertainty_reason\": \"Artificial inputs\", \"evidence_ids\": [\"synthetic-release\"], \"proposed_target_weight\": 0.24900316197207717}"
+        },
+        "fixture": true
+      }
+    }
+  ]
+}

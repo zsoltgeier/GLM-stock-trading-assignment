@@ -173,7 +173,8 @@ def save_run(config, model, period, replay=False):
     output.mkdir(parents=True, exist_ok=True)
     prompt_dir = Path(__file__).parent / "prompts"
     manifest = {"created_at":datetime.now(timezone.utc).isoformat(), "period":period,
-        "mode":"cached historical replay" if replay else "local Ollama historical replay",
+        "mode":("SYNTHETIC FIXTURE: not historical/model-generated results" if config.data_kind == "synthetic_fixture"
+                else ("cached historical replay" if replay else "local Ollama historical replay")),
         "config":config.model_dump(mode="json"), "model":model.identity,
         "config_hash":text_hash(config.model_dump_json()),
         "prompts":{p.name:text_hash(p.read_text()) for p in sorted(prompt_dir.glob("*.txt"))},
@@ -197,7 +198,19 @@ def save_run(config, model, period, replay=False):
     return metrics
 
 
+def verify_run_inputs(config, period):
+    manifest = json.loads((config.output_dir / period / "manifest.json").read_text())
+    saved_config = type(config).model_validate(manifest["config"])
+    if saved_config != config:
+        raise ValueError("Configuration differs from the recorded run; use a separate output_dir")
+    for key, path in [("prices_sha256", config.prices_path), ("evidence_sha256", config.evidence_path)]:
+        if text_hash(path.read_text()) != manifest[key]:
+            raise ValueError(f"Input changed since recorded run: {path}")
+    return manifest
+
+
 def compare(config, period="evaluation"):
+    verify_run_inputs(config, period)
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt

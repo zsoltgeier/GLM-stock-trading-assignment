@@ -1,0 +1,15 @@
+[
+  {
+    "source_id": "synthetic-release",
+    "ticker": "MSFT",
+    "company": "Microsoft Corporation",
+    "cik": "0000789019",
+    "url": "https://example.org/synthetic-fixture",
+    "published_at": "2023-12-15",
+    "available_at": "2023-12-18T14:30:00Z",
+    "timestamp_precision": "date",
+    "retrieved_at": "2026-11-06T00:00:00Z",
+    "text": "Synthetic fixture: revenue increased by 10 percent. This is an authored test input, not historical financial evidence.",
+    "sha256": "18c7629b78689a53864fd1680848e97b3786ea459e79c470136ec92c09aaea16"
+  }
+]

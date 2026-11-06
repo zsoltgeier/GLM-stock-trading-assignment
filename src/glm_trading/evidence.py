@@ -36,13 +36,14 @@ def eligible_sources(sources, cutoff, config, cal):
     lower = cutoff - pd.Timedelta(days=config.max_source_age_days)
     eligible = []
     for source in sources:
+        if not lower <= source.available_at <= cutoff:
+            continue
         if source.ticker != config.ticker or source.company != config.company or source.cik != config.cik:
             raise ValueError("Evidence company identity mismatch")
         earliest = available_at(source.published_at, source.timestamp_precision, cal)
         if source.available_at < earliest:
             raise ValueError(f"Evidence available before publication: {source.source_id}")
-        if lower <= source.available_at <= cutoff:
-            eligible.append(source)
+        eligible.append(source)
     # Fixed newest-first order; at most two releases per prompt, irrespective of outcomes.
     return sorted(eligible, key=lambda s: (s.available_at, s.source_id), reverse=True)[:2]
 

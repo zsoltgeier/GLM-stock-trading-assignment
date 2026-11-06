@@ -1,0 +1,11 @@
+{
+  "period": "development",
+  "dates": ["2023-01-03", "2023-12-15"],
+  "claims_reviewed": 4,
+  "supported_factual_statements": 2,
+  "source_ids_in_fact_fields": 2,
+  "misleading_constant_currency_interpretations": 1,
+  "invalid_weight_comparisons_in_synthesis": 1,
+  "invalid_purchase_vetoed": true,
+  "selection": "First/final scheduled development dates, reviewed before evaluation; descriptive sample"
+}
