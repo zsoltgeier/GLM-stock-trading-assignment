@@ -5,6 +5,7 @@ docs/
 .codex/
 .aws/
 .conda/
+.local/
 .env
 .env.*
 !.env.example
