@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, model_validator
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 
 class Record(BaseModel):
@@ -27,14 +27,14 @@ class Source(Record):
 class Claim(Record):
     fact: str = Field(min_length=1)
     source_id: str
-    quote: str = Field(min_length=1)
+    quote: str = Field(min_length=1, max_length=180)
     interpretation: str = Field(min_length=1)
 
 
 class Events(Record):
     ticker: str
     company: str
-    claims: list[Claim] = Field(min_length=1)
+    claims: list[Claim] = Field(min_length=1, max_length=2)
     uncertainty: Literal["low", "medium", "high"]
 
 

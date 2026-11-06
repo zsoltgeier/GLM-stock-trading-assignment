@@ -3,11 +3,12 @@
 import importlib.metadata
 import json
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 
 import requests
+import pandas as pd
 
 from .evidence import available_at, text_hash
 from .schemas import Source
@@ -63,7 +64,7 @@ def download(config, source_file=Path("data/sources.json")):
                                    "Close":"close", "Volume":"volume", "Stock Splits":"split"})
     prices["ticker"] = config.ticker
     prices = prices[["ticker", "open", "high", "low", "close", "volume", "split"]]
-    expected = cal.sessions_in_range(config.warmup_start, str(__import__('pandas').Timestamp(config.data_end).date() - __import__('datetime').timedelta(days=1)))
+    expected = cal.sessions_in_range(config.warmup_start, str(pd.Timestamp(config.data_end).date() - timedelta(days=1)))
     validate_prices(prices, config.ticker, expected)
     prices.to_csv(config.prices_path, index_label="date")
     now = datetime.now(timezone.utc)

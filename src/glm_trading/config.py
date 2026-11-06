@@ -8,8 +8,8 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 class LLMConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    base_url: str = "http://localhost:11434/v1"
-    model: str = "qwen2.5:7b"
+    base_url: str = "http://localhost:11434"
+    model: str = "qwen2.5:3b"
     temperature: float = 0
     timeout_seconds: int = Field(default=120, ge=1)
     attempts: int = Field(default=2, ge=1, le=3)

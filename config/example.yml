@@ -18,8 +18,8 @@ prices_path: data/raw/MSFT.csv
 evidence_path: data/raw/evidence.json
 output_dir: results/historical
 llm:
-  base_url: http://localhost:11434/v1
-  model: qwen2.5:7b
+  base_url: http://localhost:11434
+  model: qwen2.5:3b
   temperature: 0
-  timeout_seconds: 120
+  timeout_seconds: 300
   attempts: 2
