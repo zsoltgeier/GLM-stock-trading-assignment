@@ -1,0 +1,1115 @@
+{
+  "manifest": {
+    "created_at": "2026-11-06T15:12:55.594073+00:00",
+    "period": "evaluation",
+    "mode": "local Ollama historical replay",
+    "config": {
+      "ticker": "MSFT",
+      "company": "Microsoft Corporation",
+      "cik": "0000789019",
+      "calendar": "XNYS",
+      "warmup_start": "2022-10-03",
+      "development_start": "2023-01-03",
+      "development_end": "2023-12-29",
+      "evaluation_start": "2024-01-02",
+      "evaluation_end": "2024-12-31",
+      "data_end": "2025-02-01",
+      "decision_interval": 10,
+      "horizon_sessions": 10,
+      "max_source_age_days": 120,
+      "max_weight": 0.25,
+      "initial_cash": 10000.0,
+      "cost_bps": 10.0,
+      "prices_path": "data/raw/MSFT.csv",
+      "evidence_path": "data/raw/evidence.json",
+      "output_dir": "results/historical",
+      "cache_dir": null,
+      "data_kind": "historical",
+      "llm": {
+        "base_url": "http://localhost:11434",
+        "model": "qwen2.5:3b",
+        "temperature": 0.0,
+        "timeout_seconds": 300,
+        "attempts": 2
+      }
+    },
+    "model": {
+      "model": "qwen2.5:3b",
+      "digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+      "server": "0.40.15"
+    },
+    "config_hash": "c06f10bbeb057bd23f09264868c057d3a867fe2100eeccae225e2823ca4d40d9",
+    "prompts": {
+      "extract_events.txt": "a8aa6c7a97bff1354cb4a562082225ddbedc734d72b87caaac85c2161426e0f9",
+      "synthesize_decision.txt": "698604cff1895d4a651a4a8577f5da77822e8dd7f5228cdc82ac37ada5180834"
+    },
+    "prices_sha256": "d0238eb8f737d69047116d2b2ab27b05dba02e90498f9c475a8d6251f985b2c8",
+    "evidence_sha256": "8141266f63271fb0dacd50171aa4858543e82c7c760556e0b6f7431c77dd4091",
+    "git_commit": "45f0cecabf3e688db43fe758d6638abf428e1e37",
+    "versions": {
+      "glm-trading": "0.1.0",
+      "pandas": "2.2.3",
+      "numpy": "1.26.4",
+      "pydantic": "2.10.6",
+      "exchange-calendars": "4.13.2"
+    },
+    "limitations": [
+      "Pretrained future knowledge cannot be excluded",
+      "Retrospectively downloaded vendor data",
+      "One selected stock/year, exploratory results",
+      "Price returns exclude dividends"
+    ],
+    "last_replay_at": "2026-11-06T15:20:09.100381+00:00",
+    "last_replay_git_commit": "390e38b0d5c03f7ea61d47047b501379c1c4d764"
+  },
+  "metrics": {
+    "net_return": 0.03530253370999081,
+    "max_drawdown": -0.045986575824258025,
+    "average_exposure": 0.27409859257850444,
+    "trade_count": 1,
+    "turnover": 0.2499375156210947,
+    "transaction_cost": 2.499375156210947,
+    "cost_bps_per_side": 10.0,
+    "decision_count": 26,
+    "actions": {
+      "BUY": 1,
+      "HOLD": 1,
+      "NO_TRADE": 24
+    },
+    "abstention_rate": 0.9230769230769231,
+    "veto_reasons": {
+      "RISK_VETO": 24
+    },
+    "terminal_policy": "mark to last session close; no forced liquidation",
+    "returns": "price returns; dividends excluded",
+    "llm_calls": 52,
+    "valid_llm_calls": 52,
+    "extra_attempts": 0,
+    "prompt_tokens": 78858,
+    "generated_tokens": 11892,
+    "recorded_model_seconds": 274.695498176,
+    "inference_cost_assumption": "Local model: no provider fee; hardware and energy costs not estimated"
+  },
+  "comparison": [
+    {
+      "strategy": "llm",
+      "net_return": 0.03556135934341831,
+      "max_drawdown": -0.045986575824258025,
+      "average_exposure": 0.2740985925785045,
+      "trade_count": 1,
+      "turnover": 0.25,
+      "transaction_cost": 0.0,
+      "cost_bps_per_side": 0,
+      "decision_count": 26,
+      "actions": {
+        "BUY": 1,
+        "HOLD": 1,
+        "NO_TRADE": 24
+      },
+      "abstention_rate": 0.9230769230769231,
+      "veto_reasons": {
+        "RISK_VETO": 24
+      },
+      "terminal_policy": "mark to last session close; no forced liquidation",
+      "returns": "price returns; dividends excluded"
+    },
+    {
+      "strategy": "rules",
+      "net_return": -0.0011197848475050787,
+      "max_drawdown": -0.05654113762394386,
+      "average_exposure": 0.1674533670429204,
+      "trade_count": 9,
+      "turnover": 1.8031749199152434,
+      "transaction_cost": 0.0,
+      "cost_bps_per_side": 0,
+      "decision_count": 26,
+      "actions": {
+        "BUY": 6,
+        "HOLD": 15,
+        "SELL": 5
+      },
+      "abstention_rate": 0.0,
+      "veto_reasons": {},
+      "terminal_policy": "mark to last session close; no forced liquidation",
+      "returns": "price returns; dividends excluded"
+    },
+    {
+      "strategy": "buy_hold",
+      "net_return": 0.03556135934341831,
+      "max_drawdown": -0.045986575824258025,
+      "average_exposure": 0.2740985925785045,
+      "trade_count": 1,
+      "turnover": 0.25,
+      "transaction_cost": 0.0,
+      "cost_bps_per_side": 0,
+      "decision_count": 26,
+      "actions": {
+        "BUY": 1,
+        "HOLD": 25
+      },
+      "abstention_rate": 0.0,
+      "veto_reasons": {},
+      "terminal_policy": "mark to last session close; no forced liquidation",
+      "returns": "price returns; dividends excluded"
+    },
+    {
+      "strategy": "llm",
+      "net_return": 0.03530253370999081,
+      "max_drawdown": -0.045986575824258025,
+      "average_exposure": 0.27409859257850444,
+      "trade_count": 1,
+      "turnover": 0.2499375156210947,
+      "transaction_cost": 2.499375156210947,
+      "cost_bps_per_side": 10,
+      "decision_count": 26,
+      "actions": {
+        "BUY": 1,
+        "HOLD": 1,
+        "NO_TRADE": 24
+      },
+      "abstention_rate": 0.9230769230769231,
+      "veto_reasons": {
+        "RISK_VETO": 24
+      },
+      "terminal_policy": "mark to last session close; no forced liquidation",
+      "returns": "price returns; dividends excluded"
+    },
+    {
+      "strategy": "rules",
+      "net_return": -0.002885816912657768,
+      "max_drawdown": -0.05747988718882857,
+      "average_exposure": 0.16745336704292035,
+      "trade_count": 9,
+      "turnover": 1.8015509223464778,
+      "transaction_cost": 18.01550922346478,
+      "cost_bps_per_side": 10,
+      "decision_count": 26,
+      "actions": {
+        "BUY": 6,
+        "HOLD": 14,
+        "SELL": 6
+      },
+      "abstention_rate": 0.0,
+      "veto_reasons": {},
+      "terminal_policy": "mark to last session close; no forced liquidation",
+      "returns": "price returns; dividends excluded"
+    },
+    {
+      "strategy": "buy_hold",
+      "net_return": 0.03530253370999081,
+      "max_drawdown": -0.045986575824258025,
+      "average_exposure": 0.27409859257850444,
+      "trade_count": 1,
+      "turnover": 0.2499375156210947,
+      "transaction_cost": 2.499375156210947,
+      "cost_bps_per_side": 10,
+      "decision_count": 26,
+      "actions": {
+        "BUY": 1,
+        "HOLD": 25
+      },
+      "abstention_rate": 0.0,
+      "veto_reasons": {},
+      "terminal_policy": "mark to last session close; no forced liquidation",
+      "returns": "price returns; dividends excluded"
+    },
+    {
+      "strategy": "llm",
+      "net_return": 0.03491453775732034,
+      "max_drawdown": -0.045986575824258025,
+      "average_exposure": 0.27409859257850455,
+      "trade_count": 1,
+      "turnover": 0.24984384759525297,
+      "transaction_cost": 6.2460961898813245,
+      "cost_bps_per_side": 25,
+      "decision_count": 26,
+      "actions": {
+        "BUY": 1,
+        "HOLD": 1,
+        "NO_TRADE": 24
+      },
+      "abstention_rate": 0.9230769230769231,
+      "veto_reasons": {
+        "RISK_VETO": 24
+      },
+      "terminal_policy": "mark to last session close; no forced liquidation",
+      "returns": "price returns; dividends excluded"
+    },
+    {
+      "strategy": "rules",
+      "net_return": -0.005528898324931308,
+      "max_drawdown": -0.05888624038423751,
+      "average_exposure": 0.16745336704292038,
+      "trade_count": 9,
+      "turnover": 1.7991187913971918,
+      "transaction_cost": 44.977969784929805,
+      "cost_bps_per_side": 25,
+      "decision_count": 26,
+      "actions": {
+        "BUY": 6,
+        "HOLD": 17,
+        "SELL": 3
+      },
+      "abstention_rate": 0.0,
+      "veto_reasons": {},
+      "terminal_policy": "mark to last session close; no forced liquidation",
+      "returns": "price returns; dividends excluded"
+    },
+    {
+      "strategy": "buy_hold",
+      "net_return": 0.03491453775732034,
+      "max_drawdown": -0.045986575824258025,
+      "average_exposure": 0.27409859257850455,
+      "trade_count": 1,
+      "turnover": 0.24984384759525297,
+      "transaction_cost": 6.2460961898813245,
+      "cost_bps_per_side": 25,
+      "decision_count": 26,
+      "actions": {
+        "BUY": 1,
+        "HOLD": 25
+      },
+      "abstention_rate": 0.0,
+      "veto_reasons": {},
+      "terminal_policy": "mark to last session close; no forced liquidation",
+      "returns": "price returns; dividends excluded"
+    }
+  ],
+  "decisions": [
+    {
+      "decision_id": "MSFT-2024-01-02",
+      "ticker": "MSFT",
+      "decision_time": "2024-01-02T21:00:00Z",
+      "horizon_sessions": 10,
+      "action": "BUY",
+      "rationale": "The recent revenue growth of 13% and Office Commercial products and cloud services segment growth of 15% indicate strong financial performance. Given the low uncertainty, this trend supports a buy position.",
+      "uncertainty": "low",
+      "uncertainty_reason": "The provided revenue and growth figures are recent and specific to the quarter, offering a clear and recent indicator of financial health.",
+      "evidence_ids": [
+        "msft-2023-10-24"
+      ],
+      "indicator_values": {
+        "sma20": 372.39600067138673,
+        "sma50": 364.36100219726563,
+        "rsi14": 49.984365120695
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [],
+      "proposed_target_weight": 0.25
+    },
+    {
+      "decision_id": "MSFT-2024-01-17",
+      "ticker": "MSFT",
+      "decision_time": "2024-01-17T21:00:00Z",
+      "horizon_sessions": 10,
+      "action": "HOLD",
+      "rationale": "The recent revenue and EPS growth indicate strong financial performance, but the RSI indicator at 69 suggests that the stock may be overbought and could be in a consolidation phase. The HOLD decision preserves the current position to avoid potential losses from a possible pullback.",
+      "uncertainty": "low",
+      "uncertainty_reason": "The evidence from the recent financial reports supports the current position, but the RSI indicator is the only technical indicator provided, which may not fully capture the market dynamics.",
+      "evidence_ids": [
+        "msft-2023-10-24",
+        "msft-2023-10-24"
+      ],
+      "indicator_values": {
+        "sma20": 376.3975006103516,
+        "sma50": 373.1146014404297,
+        "rsi14": 69.09755670453583
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [],
+      "proposed_target_weight": 0.2602539213353717
+    },
+    {
+      "decision_id": "MSFT-2024-01-31",
+      "ticker": "MSFT",
+      "decision_time": "2024-01-31T21:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 390.3789993286133,
+        "sma50": 380.4944006347656,
+        "rsi14": 58.828511725874925
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.2642412202357983
+    },
+    {
+      "decision_id": "MSFT-2024-02-14",
+      "ticker": "MSFT",
+      "decision_time": "2024-02-14T21:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 406.0559967041016,
+        "sma50": 387.22839904785155,
+        "rsi14": 57.68109529263745
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.27001950845393163
+    },
+    {
+      "decision_id": "MSFT-2024-02-29",
+      "ticker": "MSFT",
+      "decision_time": "2024-02-29T21:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 408.9939987182617,
+        "sma50": 394.4605993652344,
+        "rsi14": 60.04628039751383
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.2720116808346315
+    },
+    {
+      "decision_id": "MSFT-2024-03-14",
+      "ticker": "MSFT",
+      "decision_time": "2024-03-14T20:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 409.23000183105466,
+        "sma50": 401.9619995117188,
+        "rsi14": 65.1325149740388
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.2775134558666435
+    },
+    {
+      "decision_id": "MSFT-2024-03-28",
+      "ticker": "MSFT",
+      "decision_time": "2024-03-28T20:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 416.7895004272461,
+        "sma50": 410.6173992919922,
+        "rsi14": 55.42443985588782
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.275385365941161
+    },
+    {
+      "decision_id": "MSFT-2024-04-12",
+      "ticker": "MSFT",
+      "decision_time": "2024-04-12T20:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 422.94850006103513,
+        "sma50": 414.9897998046875,
+        "rsi14": 52.18618602069152
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.275944606683368
+    },
+    {
+      "decision_id": "MSFT-2024-04-26",
+      "ticker": "MSFT",
+      "decision_time": "2024-04-26T20:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 415.01100006103513,
+        "sma50": 414.19940063476565,
+        "rsi14": 44.58407749809855
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.26849043346998736
+    },
+    {
+      "decision_id": "MSFT-2024-05-10",
+      "ticker": "MSFT",
+      "decision_time": "2024-05-10T20:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 405.8949996948242,
+        "sma50": 413.7502001953125,
+        "rsi14": 54.42653361577151
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.27253789003027346
+    },
+    {
+      "decision_id": "MSFT-2024-05-24",
+      "ticker": "MSFT",
+      "decision_time": "2024-05-24T20:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 414.40599822998047,
+        "sma50": 416.2697991943359,
+        "rsi14": 62.95351920417587
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.2798352802444868
+    },
+    {
+      "decision_id": "MSFT-2024-06-10",
+      "ticker": "MSFT",
+      "decision_time": "2024-06-10T20:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 422.7875,
+        "sma50": 416.14940002441404,
+        "rsi14": 58.74154794762607
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.2787608237093643
+    },
+    {
+      "decision_id": "MSFT-2024-06-25",
+      "ticker": "MSFT",
+      "decision_time": "2024-06-25T20:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 433.29150238037107,
+        "sma50": 420.4070001220703,
+        "rsi14": 70.4811497477987
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.289445307509673
+    },
+    {
+      "decision_id": "MSFT-2024-07-10",
+      "ticker": "MSFT",
+      "decision_time": "2024-07-10T20:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 451.7515014648437,
+        "sma50": 430.8456005859375,
+        "rsi14": 68.51907857719912
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.2963553794097131
+    },
+    {
+      "decision_id": "MSFT-2024-07-24",
+      "ticker": "MSFT",
+      "decision_time": "2024-07-24T20:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 451.8874984741211,
+        "sma50": 438.8039996337891,
+        "rsi14": 36.980920834988105
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.2792444886289522
+    },
+    {
+      "decision_id": "MSFT-2024-08-07",
+      "ticker": "MSFT",
+      "decision_time": "2024-08-07T20:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 428.9939956665039,
+        "sma50": 436.68079956054686,
+        "rsi14": 28.587648029362356
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.26465664106689774
+    },
+    {
+      "decision_id": "MSFT-2024-08-21",
+      "ticker": "MSFT",
+      "decision_time": "2024-08-21T20:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 414.34099731445315,
+        "sma50": 435.42539855957034,
+        "rsi14": 52.03146590774392
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.277003861410174
+    },
+    {
+      "decision_id": "MSFT-2024-09-05",
+      "ticker": "MSFT",
+      "decision_time": "2024-09-05T20:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 414.1809997558594,
+        "sma50": 429.03659851074224,
+        "rsi14": 40.758513859273556
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.26948964828603994
+    },
+    {
+      "decision_id": "MSFT-2024-09-19",
+      "ticker": "MSFT",
+      "decision_time": "2024-09-19T20:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 418.2750015258789,
+        "sma50": 422.03479858398447,
+        "rsi14": 64.94255145142014
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.28380948259308353
+    },
+    {
+      "decision_id": "MSFT-2024-10-03",
+      "ticker": "MSFT",
+      "decision_time": "2024-10-03T20:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 425.61450042724607,
+        "sma50": 418.52739929199225,
+        "rsi14": 42.43785716200409
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.27339734846385455
+    },
+    {
+      "decision_id": "MSFT-2024-10-17",
+      "ticker": "MSFT",
+      "decision_time": "2024-10-17T20:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 421.73499908447263,
+        "sma50": 419.13119995117194,
+        "rsi14": 45.71044346498767
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.2734831782606456
+    },
+    {
+      "decision_id": "MSFT-2024-10-31",
+      "ticker": "MSFT",
+      "decision_time": "2024-10-31T20:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 420.00000152587893,
+        "sma50": 420.7910009765626,
+        "rsi14": 36.58329358825989
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.26850493372341117
+    },
+    {
+      "decision_id": "MSFT-2024-11-14",
+      "ticker": "MSFT",
+      "decision_time": "2024-11-14T21:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 421.54600219726564,
+        "sma50": 422.0772009277344,
+        "rsi14": 55.35412811569396
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.2783000432998169
+    },
+    {
+      "decision_id": "MSFT-2024-11-29",
+      "ticker": "MSFT",
+      "decision_time": "2024-11-29T18:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 418.9354995727539,
+        "sma50": 421.0552001953125,
+        "rsi14": 53.08268654025438
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.2766826217181251
+    },
+    {
+      "decision_id": "MSFT-2024-12-13",
+      "ticker": "MSFT",
+      "decision_time": "2024-12-13T21:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 430.4049987792969,
+        "sma50": 423.9934002685547,
+        "rsi14": 66.07063987172629
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.2877629696613102
+    },
+    {
+      "decision_id": "MSFT-2024-12-30",
+      "ticker": "MSFT",
+      "decision_time": "2024-12-30T21:00:00Z",
+      "horizon_sessions": 10,
+      "action": "NO_TRADE",
+      "rationale": "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY",
+      "uncertainty": "high",
+      "uncertainty_reason": "Insufficient verified evidence",
+      "evidence_ids": [],
+      "indicator_values": {
+        "sma20": 440.3039978027344,
+        "sma50": 428.4827996826172,
+        "rsi14": 40.491531105758234
+      },
+      "risk_checks": [
+        "POINT_IN_TIME_INPUTS",
+        "IDENTITY_AND_REFERENCES",
+        "MAX_PURCHASE_WEIGHT"
+      ],
+      "veto_reasons": [
+        "RISK_VETO: POSITION_LIMIT_OR_NONINCREASING_BUY"
+      ],
+      "proposed_target_weight": 0.2773295093358953
+    }
+  ],
+  "outcomes": [
+    {
+      "decision_id": "MSFT-2024-01-02",
+      "entry_date": "2024-01-03",
+      "outcome_date": "2024-01-18",
+      "forward_price_return": 0.0615430228,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-01-17",
+      "entry_date": "2024-01-18",
+      "outcome_date": "2024-02-01",
+      "forward_price_return": 0.025809214,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-01-31",
+      "entry_date": "2024-02-01",
+      "outcome_date": "2024-02-15",
+      "forward_price_return": 0.0157032284,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-02-14",
+      "entry_date": "2024-02-15",
+      "outcome_date": "2024-03-01",
+      "forward_price_return": 0.007668874,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-02-29",
+      "entry_date": "2024-03-01",
+      "outcome_date": "2024-03-15",
+      "forward_price_return": 0.0195006194,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-03-14",
+      "entry_date": "2024-03-15",
+      "outcome_date": "2024-04-01",
+      "forward_price_return": 0.0111140346,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-03-28",
+      "entry_date": "2024-04-01",
+      "outcome_date": "2024-04-15",
+      "forward_price_return": 0.0062507225,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-04-12",
+      "entry_date": "2024-04-15",
+      "outcome_date": "2024-04-29",
+      "forward_price_return": -0.0500468959,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-04-26",
+      "entry_date": "2024-04-29",
+      "outcome_date": "2024-05-13",
+      "forward_price_return": 0.0314867607,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-05-10",
+      "entry_date": "2024-05-13",
+      "outcome_date": "2024-05-28",
+      "forward_price_return": 0.0277983657,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-05-24",
+      "entry_date": "2024-05-28",
+      "outcome_date": "2024-06-11",
+      "forward_price_return": -0.0096594601,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-06-10",
+      "entry_date": "2024-06-11",
+      "outcome_date": "2024-06-26",
+      "forward_price_return": 0.0552787168,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-06-25",
+      "entry_date": "2024-06-26",
+      "outcome_date": "2024-07-11",
+      "forward_price_return": 0.0311358819,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-07-10",
+      "entry_date": "2024-07-11",
+      "outcome_date": "2024-07-25",
+      "forward_price_return": -0.0738261315,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-07-24",
+      "entry_date": "2024-07-25",
+      "outcome_date": "2024-08-08",
+      "forward_price_return": -0.0614738482,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-08-07",
+      "entry_date": "2024-08-08",
+      "outcome_date": "2024-08-22",
+      "forward_price_return": 0.0544677039,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-08-21",
+      "entry_date": "2024-08-22",
+      "outcome_date": "2024-09-06",
+      "forward_price_return": -0.036054266,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-09-05",
+      "entry_date": "2024-09-06",
+      "outcome_date": "2024-09-20",
+      "forward_price_return": 0.0688407662,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-09-19",
+      "entry_date": "2024-09-20",
+      "outcome_date": "2024-10-04",
+      "forward_price_return": -0.043410665,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-10-03",
+      "entry_date": "2024-10-04",
+      "outcome_date": "2024-10-18",
+      "forward_price_return": -0.0026300105,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-10-17",
+      "entry_date": "2024-10-18",
+      "outcome_date": "2024-11-01",
+      "forward_price_return": -0.0194898705,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-10-31",
+      "entry_date": "2024-11-01",
+      "outcome_date": "2024-11-15",
+      "forward_price_return": 0.026429665,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-11-14",
+      "entry_date": "2024-11-15",
+      "outcome_date": "2024-12-02",
+      "forward_price_return": 0.0041684531,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-11-29",
+      "entry_date": "2024-12-02",
+      "outcome_date": "2024-12-16",
+      "forward_price_return": 0.0609625477,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-12-13",
+      "entry_date": "2024-12-16",
+      "outcome_date": "2024-12-31",
+      "forward_price_return": -0.0473315524,
+      "status": "OK"
+    },
+    {
+      "decision_id": "MSFT-2024-12-30",
+      "entry_date": "2024-12-31",
+      "outcome_date": "2025-01-16",
+      "forward_price_return": 0.0061018683,
+      "status": "OK"
+    }
+  ]
+}

@@ -43,3 +43,23 @@ Findings are exploratory: no preregistration, independent asset selection or
 confirmatory replication is claimed. The manifest records model digest,
 data/prompt hashes and source commit. Timestamp checks cannot eliminate
 pretrained future knowledge or retrospective vendor data revisions.
+
+## Completed evaluation and reproduction
+
+- `python -m pytest -q`: **37 passed**. The plotting dependency emits
+  pyparsing deprecation warnings; no package requirements are broken.
+- Nine original release datelines/ticker identities were checked; historical
+  prices contain 585 rows with the expected session coverage.
+- Genuine local inference: Qwen 2.5 3B, Ollama 0.40.15. The 2024 run has 26
+  decisions, 52 mechanically valid stage calls and no retries. One BUY, one HOLD
+  and 24 risk-vetoed NO_TRADE decisions result in one executed purchase.
+- Offline replay reproduced every original decision exactly, without contacting
+  Ollama, and preserved the original protocol. All 26 forward outcomes are available.
+- At 10 bp per side: LLM and allocation-matched buy-and-hold both return 3.53%;
+  the rules-only strategy returns −0.29%. This run shows no portfolio advantage
+  over matched buy-and-hold. It does not justify a general performance claim.
+- Recorded inference totals: 78,858 prompt tokens, 11,892 generated tokens and
+  274.7 seconds of summed model-call duration. Local hardware/energy costs are
+  not estimated.
+- The generated final report contains exactly five pages. Its Markdown and
+  machine-readable result snapshot are versioned; the PDF remains ignored.

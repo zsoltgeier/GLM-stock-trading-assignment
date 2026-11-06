@@ -126,7 +126,8 @@ complete dated request.
 The report command builds `reports/final_report.pdf` and its Markdown content,
 `reports/report.md`. Its five pages include the objective, sources/dates, method,
 prompts, indicators, risk controls, examples, evaluation, tests, results and
-limitations. [Verification notes](reports/verification.md) record test/audit
+limitations. `reports/results.json` preserves the experiment's manifest, metrics,
+decisions, comparisons and outcome diagnostics. [Verification notes](reports/verification.md) record test/audit
 observations. Review the PDF and the instructor's separate deadline, channel and
 group policy before submitting.
 
