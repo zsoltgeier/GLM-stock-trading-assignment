@@ -1,0 +1,23 @@
+# Local assignment brief, planning and development context
+docs/
+*.pdf
+.agents/
+.codex/
+.aws/
+.conda/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+data/raw/
+results/
+reports/figures/
+environment.resolved.yml
+.coverage
+htmlcov/

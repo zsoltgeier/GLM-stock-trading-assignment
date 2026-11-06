@@ -1,0 +1,25 @@
+ticker: MSFT
+company: Microsoft Corporation
+cik: '0000789019'
+calendar: XNYS
+warmup_start: '2022-10-03'
+development_start: '2023-01-03'
+development_end: '2023-12-29'
+evaluation_start: '2024-01-02'
+evaluation_end: '2024-12-31'
+data_end: '2025-02-01' # exclusive; outcomes only after evaluation_end
+decision_interval: 10
+horizon_sessions: 10
+max_source_age_days: 120
+max_weight: 0.25
+initial_cash: 10000
+cost_bps: 10
+prices_path: data/raw/MSFT.csv
+evidence_path: data/raw/evidence.json
+output_dir: results/historical
+llm:
+  base_url: http://localhost:11434/v1
+  model: qwen2.5:7b
+  temperature: 0
+  timeout_seconds: 120
+  attempts: 2

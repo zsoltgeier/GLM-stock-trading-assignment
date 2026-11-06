@@ -1,0 +1,18 @@
+name: glm-trading
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - setuptools
+  - numpy=1.26
+  - pandas=2.2
+  - matplotlib=3.9
+  - pydantic=2.10
+  - pyyaml=6
+  - requests=2.32
+  - pytest=8.3
+  - pip:
+      - exchange-calendars>=4.5,<5
+      - yfinance>=0.2.54,<1
+      - reportlab>=4,<5

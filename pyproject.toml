@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "glm-trading"
+version = "0.1.0"
+description = "Evidence-grounded historical stock decisions for Pathway C"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26,<2", "pandas>=2.2,<3", "matplotlib>=3.9,<4",
+    "pydantic>=2.10,<3", "PyYAML>=6,<7", "requests>=2.32,<3",
+    "exchange-calendars>=4.5,<5", "yfinance>=0.2.54,<1", "reportlab>=4,<5",
+]
+
+[project.scripts]
+glm-trading = "glm_trading.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+glm_trading = ["prompts/*.txt"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
