@@ -96,6 +96,7 @@ def generate_report(config, period="evaluation"):
     valid = metrics.get("valid_llm_calls", 0)
     total = metrics.get("llm_calls", 0)
     paragraph(f"Verified model-stage calls: {valid}/{total}; extra attempts: {metrics.get('extra_attempts', 0)}. Action counts: {json.dumps(metrics['actions'], sort_keys=True)}. Abstention rate: {metrics['abstention_rate']:.1%}. Veto categories: {json.dumps(metrics['veto_reasons'], sort_keys=True)}. A valid stage requires schema, identity, eligible references and the stage-specific checks; it is not a prediction-accuracy score.")
+    paragraph(f"Recorded inference: {metrics.get('prompt_tokens', 0):,} prompt tokens, {metrics.get('generated_tokens', 0):,} generated tokens, {metrics.get('recorded_model_seconds', 0):.1f} seconds of summed model-call duration (including any failed attempts). Cache replay does not repeat that computation. Local inference has no provider fee; hardware/energy costs are not estimated.")
     paragraph("Injected failure tests independently demonstrate stale/missing evidence, hallucinated references, unsupported quotes, wrong ticker, invalid JSON, timeouts and allocation violations. Such test cases are software verification evidence, not historical observations.")
     next_page()
 
@@ -123,6 +124,10 @@ def generate_report(config, period="evaluation"):
     conclusion = ("The artificial fixture reproduces correctly; no historical or LLM-performance conclusion can be drawn from this run." if synthetic
         else f"The recorded workflow produced {len(decisions)} dated decisions, with {metrics['abstention_rate']:.1%} abstentions and a simulated net price return of {metrics['net_return']:.2%}. Its useful result is an inspectable link from dated evidence and indicators through validation to portfolio outcomes. Any apparent performance advantage requires an untouched multi-period replication and stronger evidence coverage.")
     paragraph(conclusion)
+    if not synthetic:
+        matched = next(r for r in comparison if r["strategy"] == "buy_hold" and r["cost_bps_per_side"] == 10)
+        llm = next(r for r in comparison if r["strategy"] == "llm" and r["cost_bps_per_side"] == 10)
+        paragraph(f"At 10 bp per side, the LLM portfolio returned {llm['net_return']:.2%}, versus {matched['net_return']:.2%} for allocation-matched buy-and-hold. The recorded action sequence and vetoes must be considered when interpreting this comparison; abstention does not remove the risk of already-held stock.")
     paragraph("Reproduction: create the conda environment, install the package without reinstalling dependencies, run pytest, download inputs, start/pull the configured Ollama model, run development and evaluation, then evaluate and generate this report. Offline sample replay requires no server. Exact commands and model setup are in Readme.md. Instructor deadline, submission channel and group policy are separate from this implementation.")
     heading("Sources")
     paragraph("Assignment: GLM Stock Trading Final Project, common requirements (p. 1), Pathway C and submission rules (p. 3). Market prices: Yahoo via yfinance, ranaroussi.github.io/yfinance/reference/api/yfinance.download.html. Original financial releases: microsoft.com/en-us/Investor/earnings/, FY2023 Q1–Q4, FY2024 Q1–Q4 and FY2025 Q1 (publication dates in the source register). Model interface/schema: docs.ollama.com/api/chat and docs.ollama.com/capabilities/structured-outputs. Calendar: github.com/gerrymanoim/exchange_calendars.")
@@ -137,4 +142,8 @@ def generate_report(config, period="evaluation"):
     SimpleDocTemplate(str(path), pagesize=A4, rightMargin=42, leftMargin=42,
                       topMargin=36, bottomMargin=40).build(story, onFirstPage=footer, onLaterPages=footer)
     (report_dir / ("sample_report.md" if synthetic else "report.md")).write_text("\n".join(markdown))
+    if not synthetic:
+        (report_dir / "results.json").write_text(json.dumps({"manifest":manifest, "metrics":metrics,
+            "comparison":comparison, "decisions":decisions,
+            "outcomes":json.loads(outcomes.to_json(orient="records"))}, indent=2))
     return path

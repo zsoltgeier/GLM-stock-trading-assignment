@@ -5,7 +5,7 @@ import pytest
 import requests
 
 from glm_trading.config import load_config
-from glm_trading.evaluation import run
+from glm_trading.evaluation import run, save_run
 from glm_trading.llm import Ollama
 
 
@@ -31,3 +31,23 @@ def test_invalid_replay_is_not_treated_as_model_success(tmp_path, config):
     from glm_trading.schemas import Events
     with pytest.raises(ModelFailure, match="cache miss"):
         model.complete("extract_events", {}, Events, lambda e: None)
+
+
+def test_replay_keeps_original_protocol_and_detects_changed_decisions(tmp_path, monkeypatch):
+    monkeypatch.delenv("LLM_MODEL", raising=False)
+    cfg = load_config("config/sample.yml").model_copy(update={"output_dir":tmp_path})
+    save_run(cfg, Ollama(cfg.llm, cfg.cache_dir, replay=True), "evaluation", replay=True)
+    path = tmp_path / "evaluation" / "manifest.json"
+    original = json.loads(path.read_text())
+    save_run(cfg, Ollama(cfg.llm, cfg.cache_dir, replay=True), "evaluation", replay=True)
+    replayed = json.loads(path.read_text())
+    assert replayed["created_at"] == original["created_at"]
+    assert replayed["git_commit"] == original["git_commit"]
+    assert "last_replay_at" in replayed
+    decisions_path = path.parent / "decisions.json"
+    changed = json.loads(decisions_path.read_text())
+    changed[0]["rationale"] = "Deliberately altered saved result"
+    decisions_path.write_text(json.dumps(changed))
+    with pytest.raises(ValueError, match="differ"):
+        save_run(cfg, Ollama(cfg.llm, cfg.cache_dir, replay=True), "evaluation", replay=True)
+    assert json.loads(decisions_path.read_text()) == changed

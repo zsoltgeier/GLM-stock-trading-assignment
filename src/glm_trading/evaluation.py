@@ -184,15 +184,31 @@ def save_run(config, model, period, replay=False):
         "versions":{p:version(p) for p in ["glm-trading", "pandas", "numpy", "pydantic", "exchange-calendars"]},
         "limitations":["Pretrained future knowledge cannot be excluded", "Retrospectively downloaded vendor data",
                        "One selected stock/year, exploratory results", "Price returns exclude dividends"]}
-    # Save protocol before executing any model calls.
-    (output / "manifest.json").write_text(json.dumps(manifest, indent=2))
+    manifest_path = output / "manifest.json"
+    if replay and manifest_path.exists():
+        original = verify_run_inputs(config, period)
+        original["last_replay_at"] = manifest["created_at"]
+        original["last_replay_git_commit"] = manifest["git_commit"]
+        manifest = original
+    # Preserve the original experiment protocol when replaying recorded responses.
+    manifest_path.write_text(json.dumps(manifest, indent=2))
     decisions, ledger, metrics = run(config, model, period, progress=True)
-    (output / "decisions.json").write_text(json.dumps([d.model_dump(mode="json") for d in decisions], indent=2))
+    decision_path = output / "decisions.json"
+    serialized = [d.model_dump(mode="json") for d in decisions]
+    if replay and decision_path.exists() and json.loads(decision_path.read_text()) != serialized:
+        raise ValueError("Replay decisions differ from the original run; original decisions were preserved")
+    decision_path.write_text(json.dumps(serialized, indent=2))
     ledger.to_csv(output / "ledger.csv", index=False)
     (output / "calls.json").write_text(json.dumps(model.calls, indent=2))
     metrics["llm_calls"] = len(model.calls)
     metrics["valid_llm_calls"] = sum(c["valid"] for c in model.calls)
     metrics["extra_attempts"] = sum(c["attempts"] - 1 for c in model.calls)
+    responses = [attempt.get("response", {}) for call in model.calls
+                 for attempt in json.loads(Path(call["cache_file"]).read_text())["attempts"]]
+    metrics["prompt_tokens"] = sum(r.get("prompt_eval_count", 0) for r in responses)
+    metrics["generated_tokens"] = sum(r.get("eval_count", 0) for r in responses)
+    metrics["recorded_model_seconds"] = sum(r.get("total_duration", 0) for r in responses) / 1e9
+    metrics["inference_cost_assumption"] = "Local model: no provider fee; hardware and energy costs not estimated"
     (output / "metrics.json").write_text(json.dumps(metrics, indent=2))
     forward_outcomes(decisions, read_prices(config.prices_path), calendar(config), config).to_csv(output / "outcomes.csv", index=False)
     return metrics
@@ -225,7 +241,9 @@ def compare(config, period="evaluation"):
                 frozen=decisions if name == "llm" else None, cost_bps=cost)
             comparisons.append({"strategy":name, **metrics})
             if cost == 10:
-                ax.plot(pd.to_datetime(ledger.date), ledger.equity, label=name)
+                labels = {"llm":"LLM", "rules":"Rules", "buy_hold":"Buy and hold (25%)"}
+                ax.plot(pd.to_datetime(ledger.date), ledger.equity, label=labels[name],
+                        linestyle="--" if name == "buy_hold" else "-")
                 ledger.to_csv(output / f"{name}_ledger.csv", index=False)
     ax.set(ylabel="Portfolio value ($)", title=f"{config.ticker}: price returns, 10 bp per side")
     ax.legend()
